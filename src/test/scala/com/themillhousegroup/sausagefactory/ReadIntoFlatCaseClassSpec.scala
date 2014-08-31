@@ -2,7 +2,7 @@ package com.themillhousegroup.sausagefactory
 
 import org.specs2.mutable.Specification
 import java.lang.{ IllegalArgumentException, UnsupportedOperationException }
-import scala.Predef.String
+import scala.Predef._
 import com.themillhousegroup.sausagefactory.test.CaseClassSpecification
 import com.themillhousegroup.sausagefactory.test.CaseClassFixtures._
 
@@ -59,7 +59,7 @@ class ReadIntoFlatCaseClassSpec extends Specification with CaseClassSpecificatio
     }
 
     "Support single-level mapping of mixed types" in new CaseClassScope(
-      buildMap("foo", 6, Int.box(9))) {
+      buildMap("foo", 6, 9)) {
 
       val readResult = readIntoResult[MixedBunch]
       readResult must not beNull
@@ -68,49 +68,38 @@ class ReadIntoFlatCaseClassSpec extends Specification with CaseClassSpecificatio
       readResult.second must beSome(6)
       readResult.third must beEqualTo(9)
     }
-    //
-    //    "Support single-level mapping where a member is a list" in new CaseClassScope(
-    //      """ :first "foo" :third ("x" "y" "z") :second 9 """) {
-    //
-    //      val readResult = readIntoResult[BasicWithList]
-    //      readResult must not beNull
-    //
-    //      readResult.first must beEqualTo("foo")
-    //      readResult.third must containTheSameElementsAs(Seq("x", "y", "z"))
-    //      readResult.second must beEqualTo(9)
-    //    }
-    //
-    //    "Support single-level mapping where a member is a vector" in new CaseClassScope(
-    //      """ :first "foo" :third ["x" "y" "z"] :second 9 """) {
-    //
-    //      val readResult = readIntoResult[BasicWithList]
-    //      readResult must not beNull
-    //
-    //      readResult.first must beEqualTo("foo")
-    //      readResult.third must containTheSameElementsAs(Seq("x", "y", "z"))
-    //      readResult.second must beEqualTo(9)
-    //    }
-    //
-    //    "Support single-level mapping where a member is a set" in new CaseClassScope(
-    //      """ :first "foo" :third #{"x" "y" "z"} :second 9 """) {
-    //
-    //      val readResult = readIntoResult[BasicWithSet]
-    //      readResult must not beNull
-    //
-    //      readResult.first must beEqualTo("foo")
-    //      readResult.third must containTheSameElementsAs(Seq("x", "y", "z"))
-    //      readResult.second must beEqualTo(9)
-    //    }
-    //
-    //    "Support single-level mapping where a member is a map" in new CaseClassScope(
-    //      """ :first "foo" :third {:x "eks" :y "wye" :z "zed" } :second 9 """) {
-    //
-    //      val readResult = readIntoResult[BasicWithMap]
-    //      readResult must not beNull
-    //
-    //      readResult.first must beEqualTo("foo")
-    //      readResult.third must havePairs("x" -> "eks", "y" -> "wye", "z" -> "zed")
-    //      readResult.second must beEqualTo(9)
-    //    }
+
+    "Support single-level mapping where a member is a list of simple types" in new CaseClassScope(
+      buildMap("a", List("x", "y", "z"), 9)) {
+
+      val readResult = readIntoResult[BasicWithList]
+      readResult must not beNull
+
+      readResult.first must beEqualTo("a")
+      readResult.second must containTheSameElementsAs(Seq("x", "y", "z"))
+      readResult.third must beEqualTo(9)
+    }
+
+    "Support single-level mapping where a member is a set of simple types" in new CaseClassScope(
+      buildMap("a", Set("x", "y", "z"), 9)) {
+
+      val readResult = readIntoResult[BasicWithSet]
+      readResult must not beNull
+
+      readResult.first must beEqualTo("a")
+      readResult.second must containTheSameElementsAs(Seq("x", "y", "z"))
+      readResult.third must beEqualTo(9)
+    }
+
+    "Support single-level mapping where a member is a simple map" in new CaseClassScope(
+      buildMap("a", buildMap("x", "y", "z"), 99)) {
+
+      val readResult = readIntoResult[BasicWithMap]
+      readResult must not beNull
+
+      readResult.first must beEqualTo("a")
+      readResult.second must havePairs("first" -> "x", "second" -> "y", "third" -> "z")
+      readResult.third must beEqualTo(99)
+    }
   }
 }

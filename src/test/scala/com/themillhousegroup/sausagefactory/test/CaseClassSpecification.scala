@@ -5,6 +5,7 @@ import java.lang.String
 import org.specs2.specification.Scope
 import com.themillhousegroup.sausagefactory.CaseClassConverter
 import scala.util.Try
+import scala.reflect.runtime.universe._
 
 trait CaseClassSpecification {
   this: Specification =>

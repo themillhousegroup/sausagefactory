@@ -18,7 +18,7 @@ trait AlwaysMakeJavaLongsIntoInts extends FieldConverters with ReflectionHelpers
 
 class CustomLongConverter extends DefaultCaseClassConverter with AlwaysMakeJavaLongsIntoInts
 
-class ExtensionExampleSpec extends Specification {
+class FieldConverterExtensionExampleSpec extends Specification {
 
   "FieldConverters extension point (JLong->Int autoconverter)" should {
 

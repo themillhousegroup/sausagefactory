@@ -1,9 +1,9 @@
 package com.themillhousegroup.sausagefactory
 
 import com.themillhousegroup.sausagefactory.extensions.{ DefaultMapCanonicalization, DefaultFieldConverters }
-import _root_.com.themillhousegroup.sausagefactory.reflection.ReflectionHelpers
+import com.themillhousegroup.sausagefactory.reflection.ReflectionHelpers
 import scala.reflect.runtime.universe._
-import scala.collection.Map
+import scala.collection.immutable.Map
 import scala.Predef.String
 import scala.util.Try
 

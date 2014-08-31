@@ -1,6 +1,6 @@
 package com.themillhousegroup.sausagefactory.extensions
 
-import scala.collection.Map
+import scala.collection.immutable.Map
 
 trait MapCanonicalization {
 

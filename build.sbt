@@ -2,9 +2,9 @@ name := "sausagefactory"
 
 version := "0.1.0"
 
-scalaVersion := "2.11.1"
+scalaVersion := "2.11.2"
 
-crossScalaVersions := Seq("2.11.1", "2.10.4")
+crossScalaVersions := Seq("2.11.2", "2.10.4")
 
 organization := "com.themillhousegroup"
 

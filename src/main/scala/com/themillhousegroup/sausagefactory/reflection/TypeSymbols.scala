@@ -1,4 +1,4 @@
-package com.themillhousegroup.sausagefactory.traits
+package com.themillhousegroup.sausagefactory.reflection
 
 import scala.collection.GenTraversableOnce
 

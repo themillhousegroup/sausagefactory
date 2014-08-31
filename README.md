@@ -29,6 +29,9 @@ Invoke the `CaseClassConverter` on the map; it'll give you back a `Try` holding 
 ## Supported case class structure examples
 ```
     case class Basic(foo: Int, bar: String, baz: Boolean)
+
+    case class BasicOptions(foo: Option[Int], bar: Option[String])
+
     case class BasicCollections(foo: Set[String], bar: Seq[Int], baz: Map[String,String])
 
 ```

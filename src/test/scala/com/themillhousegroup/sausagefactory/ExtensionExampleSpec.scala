@@ -7,7 +7,7 @@ import scala.reflect.runtime.universe._
 import com.themillhousegroup.sausagefactory.test.CaseClassFixtures._
 
 trait AlwaysMakeJavaLongsIntoInts extends FieldConverters with ReflectionHelpers {
-  override def fieldConverter[F](t: Type, v: AnyRef): F = {
+  override def fieldConverter[F](t: Type, v: Any): F = {
     if (isInt(t) && isJLong(v.getClass)) {
       v.asInstanceOf[Long].toInt.asInstanceOf[F]
     } else {

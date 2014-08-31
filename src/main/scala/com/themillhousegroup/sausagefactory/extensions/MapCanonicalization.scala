@@ -10,10 +10,10 @@ trait MapCanonicalization {
    * keys would be illegal identifiers in Java/Scala)
    * then override this method, returning a new Map with corrected data.
    */
-  def canonicalize(map: Map[String, AnyRef]): Map[String, AnyRef]
+  def canonicalize(map: Map[String, Any]): Map[String, Any]
 }
 
 trait DefaultMapCanonicalization extends MapCanonicalization {
-  def canonicalize(map: Map[String, AnyRef]): Map[String, AnyRef] = map
+  def canonicalize(map: Map[String, Any]): Map[String, Any] = map
 }
 

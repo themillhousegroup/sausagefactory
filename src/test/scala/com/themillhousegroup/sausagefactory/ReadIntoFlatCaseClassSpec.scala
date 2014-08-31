@@ -58,17 +58,16 @@ class ReadIntoFlatCaseClassSpec extends Specification with CaseClassSpecificatio
       readResult.third must beNone
     }
 
-    //
-    //    "Support single-level mapping of mixed types" in new CaseClassScope(
-    //      """ :first "foo" :third 6 :second 9 """) {
-    //
-    //      val readResult = readIntoResult[MixedBunch]
-    //      readResult must not beNull
-    //
-    //      readResult.first must beEqualTo("foo")
-    //      readResult.third must beSome(6)
-    //      readResult.second must beEqualTo(9)
-    //    }
+    "Support single-level mapping of mixed types" in new CaseClassScope(
+      buildMap("foo", 6, Int.box(9))) {
+
+      val readResult = readIntoResult[MixedBunch]
+      readResult must not beNull
+
+      readResult.first must beEqualTo("foo")
+      readResult.second must beSome(6)
+      readResult.third must beEqualTo(9)
+    }
     //
     //    "Support single-level mapping where a member is a list" in new CaseClassScope(
     //      """ :first "foo" :third ("x" "y" "z") :second 9 """) {

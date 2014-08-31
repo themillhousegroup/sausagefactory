@@ -12,7 +12,7 @@ object CaseClassConverter {
   val m = runtimeMirror(getClass.getClassLoader)
 
   def apply[T <: Product: TypeTag](
-    map: Map[String, AnyRef],
+    map: Map[String, Any],
     converterSupplier: => CaseClassConverter = defaultSupplier): Try[T] = Try {
     converterSupplier.buildCaseClass[T](typeOf[T], map)
   }
@@ -23,14 +23,14 @@ object CaseClassConverter {
 }
 
 protected abstract class CaseClassConverter {
-  def buildCaseClass[T: TypeTag](t: Type, map: Map[String, AnyRef]): T
+  def buildCaseClass[T: TypeTag](t: Type, map: Map[String, Any]): T
 }
 
 class DefaultCaseClassConverter extends CaseClassConverter with ReflectionHelpers with DefaultMapCanonicalization with DefaultFieldConverters {
 
   import CaseClassConverter._
 
-  def buildCaseClass[T: TypeTag](t: Type, map: Map[String, AnyRef]): T = {
+  def buildCaseClass[T: TypeTag](t: Type, map: Map[String, Any]): T = {
     rejectIfScoped(t)
 
     val canonicalMap = canonicalize(map)
@@ -65,27 +65,27 @@ class DefaultCaseClassConverter extends CaseClassConverter with ReflectionHelper
     }
   }
 
-  protected def matchOptionalField[F](fieldName: String, fieldType: Type, mapValue: Option[AnyRef]): Option[F] = {
+  protected def matchOptionalField[F](fieldName: String, fieldType: Type, mapValue: Option[Any]): Option[F] = {
     mapValue.fold {
       None.asInstanceOf[Option[F]]
     } { v =>
       // given that fieldType is an Option[X], find what X is...
       val optionTargetType = findOptionTarget(fieldType)
       if (isCaseClass(optionTargetType)) {
-        Some(buildCaseClass(optionTargetType, v.asInstanceOf[Map[String, AnyRef]]))
+        Some(buildCaseClass(optionTargetType, v.asInstanceOf[Map[String, Any]]))
       } else {
         Some(fieldConverter(fieldType, v))
       }
     }
   }
 
-  protected def matchRequiredField[F](fieldName: String, fieldType: Type, mapValue: Option[AnyRef]): F = {
+  protected def matchRequiredField[F](fieldName: String, fieldType: Type, mapValue: Option[Any]): F = {
     mapValue.fold[F] {
       // Map does NOT contain a field with this keyword
       throw new IllegalArgumentException(s"Non-optional field '${fieldName}' was not found in the given map.")
     } { v =>
       if (isCaseClass(fieldType)) {
-        buildCaseClass(fieldType, v.asInstanceOf[Map[String, AnyRef]])
+        buildCaseClass(fieldType, v.asInstanceOf[Map[String, Any]])
       } else {
         fieldConverter(fieldType, v)
       }

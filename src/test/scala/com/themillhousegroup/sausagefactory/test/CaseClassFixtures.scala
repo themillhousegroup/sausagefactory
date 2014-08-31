@@ -29,7 +29,7 @@ object CaseClassFixtures {
 
   val keys = Seq("first", "second", "third")
 
-  def buildMap(values: AnyRef*): Map[String, AnyRef] = {
+  def buildMap(values: Any*): Map[String, Any] = {
     keys.zip(values).toMap
   }
 

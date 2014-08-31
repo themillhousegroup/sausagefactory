@@ -10,7 +10,7 @@ import scala.reflect.runtime.universe._
 trait CaseClassSpecification {
   this: Specification =>
 
-  class CaseClassScope(m: Map[String, AnyRef]) extends Scope {
+  class CaseClassScope(m: Map[String, Any]) extends Scope {
 
     def readInto[T <: Product: TypeTag]: Try[T] = {
       CaseClassConverter[T](m)

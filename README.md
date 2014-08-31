@@ -26,7 +26,11 @@ Invoke the `CaseClassConverter` on the map; it'll give you back a `Try` holding 
 
 ```
 
-## Supported case class structure examples
+### How are fields mapped?
+Fields in the map not found in the target case class will be ignored.
+Fields in the target class MUST be present in the map, unless they are `Option` types, in which case they will be set to None.
+
+### Supported case class structure examples
 ```
     case class Basic(foo: Int, bar: String, baz: Boolean)
 

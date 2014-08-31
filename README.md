@@ -38,6 +38,10 @@ Fields in the target class MUST be present in the map, unless they are `Option` 
 
     case class BasicCollections(foo: Set[String], bar: Seq[Int], baz: Map[String,String])
 
+    case class NestedCaseClasses( foo: SomeCaseClass, bar: SomeOtherCaseClass)
+
+    case class NestedOptionalCaseClass (foo: Option[Basic], bar: Option[Basic])
+
 ```
 
 ## I have special needs!

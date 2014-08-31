@@ -20,7 +20,7 @@ object CaseClassFixtures {
 
   // Case classes with another level of case classes within
   case class NestedJustOnce(first: AllStrings)
-  case class NestedWithFields(first: AllStrings, a: Int, b: Int)
+  case class NestedWithFields(first: AllStrings, second: Int, third: Int)
   case class NestedOptionally(first: Option[AllStrings])
 
   // Multiply-nested case class

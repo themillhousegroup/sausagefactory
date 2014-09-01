@@ -74,7 +74,7 @@ class DefaultCaseClassConverter extends CaseClassConverter with ReflectionHelper
       if (isCaseClass(optionTargetType)) {
         Some(buildCaseClass(optionTargetType, v.asInstanceOf[Map[String, Any]]))
       } else {
-        Some(fieldConverter(fieldType, v))
+        Some(convert(fieldType, v))
       }
     }
   }
@@ -87,7 +87,7 @@ class DefaultCaseClassConverter extends CaseClassConverter with ReflectionHelper
       if (isCaseClass(fieldType)) {
         buildCaseClass(fieldType, v.asInstanceOf[Map[String, Any]])
       } else {
-        fieldConverter(fieldType, v)
+        convert(fieldType, v)
       }
     }
   }

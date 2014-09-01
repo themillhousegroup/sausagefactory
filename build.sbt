@@ -12,7 +12,8 @@ libraryDependencies ++= Seq(
     "com.google.gdata"      %   "core"                  % "1.47.1",
     "ch.qos.logback"        %   "logback-classic"       % "1.1.2",
     "org.mockito"           %   "mockito-all"           % "1.9.0",
-    "org.specs2"            %%  "specs2"                % "2.3.12"
+    "org.scala-lang"        %   "scala-reflect"         % scalaVersion.value,
+    "org.specs2"            %%  "specs2"                % "2.3.12"              % "test"
 )
 
 resolvers ++= Seq(  "oss-snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",

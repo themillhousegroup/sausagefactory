@@ -27,6 +27,9 @@ object CaseClassFixtures {
   case class StringsAllTheWayDown(first: AllStrings, second: Option[AllStrings])
   case class ThreeLevelsDeep(first: Int, second: Int, third: Option[StringsAllTheWayDown])
 
+  // Collections of case classes
+  case class ListOfNestedCaseClasses(first: String, second: List[AllStrings])
+
   val keys = Seq("first", "second", "third")
 
   def buildMap(values: Any*): Map[String, Any] = {

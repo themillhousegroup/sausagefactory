@@ -22,4 +22,14 @@ trait ReflectionHelpers extends TypeSymbols {
   def findOptionTarget(t: Type) = {
     t.typeArgs.head
   }
+
+  def constructorArguments(t: Type): List[Symbol] = {
+    val constructor = t.declarations.collectFirst {
+      case m: MethodSymbol if m.isPrimaryConstructor => m
+    }.get
+
+    val constructorArgs = constructor.paramss.head
+
+    constructorArgs
+  }
 }

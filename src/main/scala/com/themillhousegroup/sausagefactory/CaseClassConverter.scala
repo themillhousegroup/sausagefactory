@@ -35,13 +35,7 @@ class DefaultCaseClassConverter extends CaseClassConverter with ReflectionHelper
 
     val canonicalMap = canonicalize(map)
 
-    val constructor = t.declarations.collectFirst {
-      case m: MethodSymbol if m.isPrimaryConstructor => m
-    }.get
-
-    val constructorArgs = constructor.paramss.head
-
-    val args = constructorArgs.map { field =>
+    val args = constructorArguments(t).map { field =>
       val fieldName = field.name.decoded
       val fieldType = field.typeSignature
 

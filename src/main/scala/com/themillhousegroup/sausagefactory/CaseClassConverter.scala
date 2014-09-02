@@ -45,9 +45,7 @@ class DefaultCaseClassConverter extends CaseClassConverter with ReflectionHelper
         }.asInstanceOf[Object]
     }.toArray
 
-    val c = m.runtimeClass(t.typeSymbol.asClass)
-
-    c.getConstructors()(0).newInstance(args: _*).asInstanceOf[T]
+    constructor(m, t).newInstance(args: _*).asInstanceOf[T]
   }
 
   private[this] def rejectIfScoped(t: Type) = {

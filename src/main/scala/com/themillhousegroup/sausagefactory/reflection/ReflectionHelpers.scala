@@ -2,6 +2,7 @@ package com.themillhousegroup.sausagefactory.reflection
 
 import java.lang.Class
 import scala.reflect.runtime.universe._
+import java.lang.reflect.Constructor
 
 trait ReflectionHelpers extends TypeSymbols {
   def hasClass(t: Type, desired: Symbol): Boolean = t.baseClasses.exists(_ == desired)
@@ -21,6 +22,11 @@ trait ReflectionHelpers extends TypeSymbols {
 
   def findOptionTarget(t: Type) = {
     t.typeArgs.head
+  }
+
+  def constructor[_](m: RuntimeMirror, t: Type): Constructor[_] = {
+    val c = m.runtimeClass(t.typeSymbol.asClass)
+    c.getConstructors()(0)
   }
 
   def constructorArguments(t: Type): List[(String, Type)] = {

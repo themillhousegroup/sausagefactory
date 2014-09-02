@@ -1,6 +1,6 @@
 package com.themillhousegroup.sausagefactory
 
-import com.themillhousegroup.sausagefactory.extensions.{ DefaultMapCanonicalization, DefaultFieldConverters }
+import com.themillhousegroup.sausagefactory.extensions.DefaultFieldConverters
 import com.themillhousegroup.sausagefactory.reflection.ReflectionHelpers
 import scala.reflect.runtime.universe._
 import scala.collection.immutable.Map
@@ -24,20 +24,18 @@ protected trait CaseClassConverter {
   def buildCaseClass[T: TypeTag](t: Type, map: Map[String, Any]): T
 }
 
-class DefaultCaseClassConverter extends CaseClassConverter with ReflectionHelpers with DefaultMapCanonicalization with DefaultFieldConverters {
+class DefaultCaseClassConverter extends CaseClassConverter with ReflectionHelpers with DefaultFieldConverters {
 
   def buildCaseClass[T: TypeTag](t: Type, map: Map[String, Any]): T = {
     rejectIfScoped(t)
-
-    val canonicalMap = canonicalize(map)
 
     val args = constructorArguments(t).map {
       case (fieldName, fieldType) =>
 
         if (isOption(fieldType)) {
-          matchOptionalField(fieldName, fieldType, canonicalMap.get(fieldName))
+          matchOptionalField(fieldName, fieldType, map.get(fieldName))
         } else {
-          matchRequiredField(fieldName, fieldType, canonicalMap.get(fieldName))
+          matchRequiredField(fieldName, fieldType, map.get(fieldName))
         }.asInstanceOf[Object]
     }
 

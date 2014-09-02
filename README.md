@@ -56,12 +56,6 @@ built into the process that will allow you to hook in and change what you need.
 
 Currently there are two "extension" traits whereby you can mix in custom implementations:
 
-#### `MapCanonicalization` 
- - Function `canonicalize()` gets invoked whenever a `Map` is about to be transformed.
- - Provide your own if (for example) you need keys in the map to be adjusted in order
-for them to be Java/Scala-legal field names in a case class.
- - Example / test spec: [MapCanonicalizationExtensionExampleSpec](https://github.com/themillhousegroup/sausagefactory/blob/master/src/test/scala/com/themillhousegroup/sausagefactory/MapCanonicalizationExtensionExampleSpec.scala) 
-
 #### `FieldConverters` 
  - Function `convert()`gets invoked once we've found a match between a
 case class fieldname and a key in the incoming map. 

@@ -9,8 +9,6 @@ import scala.util.Try
 
 object CaseClassConverter {
 
-  val m = runtimeMirror(getClass.getClassLoader)
-
   def apply[T <: Product: TypeTag](
     map: Map[String, Any],
     converterSupplier: => CaseClassConverter = defaultSupplier): Try[T] = Try {
@@ -28,8 +26,6 @@ protected abstract class CaseClassConverter {
 
 class DefaultCaseClassConverter extends CaseClassConverter with ReflectionHelpers with DefaultMapCanonicalization with DefaultFieldConverters {
 
-  import CaseClassConverter._
-
   def buildCaseClass[T: TypeTag](t: Type, map: Map[String, Any]): T = {
     rejectIfScoped(t)
 
@@ -43,9 +39,9 @@ class DefaultCaseClassConverter extends CaseClassConverter with ReflectionHelper
         } else {
           matchRequiredField(fieldName, fieldType, canonicalMap.get(fieldName))
         }.asInstanceOf[Object]
-    }.toArray
+    }
 
-    constructor(m, t).newInstance(args: _*).asInstanceOf[T]
+    construct(t, args)
   }
 
   private[this] def rejectIfScoped(t: Type) = {

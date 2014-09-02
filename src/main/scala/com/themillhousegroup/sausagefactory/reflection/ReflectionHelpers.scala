@@ -5,6 +5,9 @@ import scala.reflect.runtime.universe._
 import java.lang.reflect.Constructor
 
 trait ReflectionHelpers extends TypeSymbols {
+
+  val m = runtimeMirror(getClass.getClassLoader)
+
   def hasClass(t: Type, desired: Symbol): Boolean = t.baseClasses.exists(_ == desired)
 
   def isCaseClass(t: Type): Boolean =
@@ -24,11 +27,6 @@ trait ReflectionHelpers extends TypeSymbols {
     t.typeArgs.head
   }
 
-  def constructor[_](m: RuntimeMirror, t: Type): Constructor[_] = {
-    val c = m.runtimeClass(t.typeSymbol.asClass)
-    c.getConstructors()(0)
-  }
-
   def constructorArguments(t: Type): List[(String, Type)] = {
     val constructor = t.declarations.collectFirst {
       case m: MethodSymbol if m.isPrimaryConstructor => m
@@ -41,5 +39,14 @@ trait ReflectionHelpers extends TypeSymbols {
       val fieldType = field.typeSignature
       fieldName -> fieldType
     }
+  }
+
+  def constructor[_](m: RuntimeMirror, t: Type): Constructor[_] = {
+    val c = m.runtimeClass(t.typeSymbol.asClass)
+    c.getConstructors()(0)
+  }
+
+  def construct[T](t: Type, args: List[Object]) = {
+    constructor(m, t).newInstance(args.toArray: _*).asInstanceOf[T]
   }
 }

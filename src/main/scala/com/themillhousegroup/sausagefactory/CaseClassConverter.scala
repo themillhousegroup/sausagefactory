@@ -35,15 +35,14 @@ class DefaultCaseClassConverter extends CaseClassConverter with ReflectionHelper
 
     val canonicalMap = canonicalize(map)
 
-    val args = constructorArguments(t).map { field =>
-      val fieldName = field.name.decoded
-      val fieldType = field.typeSignature
+    val args = constructorArguments(t).map {
+      case (fieldName, fieldType) =>
 
-      if (isOption(fieldType)) {
-        matchOptionalField(fieldName, fieldType, canonicalMap.get(fieldName))
-      } else {
-        matchRequiredField(fieldName, fieldType, canonicalMap.get(fieldName))
-      }.asInstanceOf[Object]
+        if (isOption(fieldType)) {
+          matchOptionalField(fieldName, fieldType, canonicalMap.get(fieldName))
+        } else {
+          matchRequiredField(fieldName, fieldType, canonicalMap.get(fieldName))
+        }.asInstanceOf[Object]
     }.toArray
 
     val c = m.runtimeClass(t.typeSymbol.asClass)

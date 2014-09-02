@@ -23,13 +23,17 @@ trait ReflectionHelpers extends TypeSymbols {
     t.typeArgs.head
   }
 
-  def constructorArguments(t: Type): List[Symbol] = {
+  def constructorArguments(t: Type): List[(String, Type)] = {
     val constructor = t.declarations.collectFirst {
       case m: MethodSymbol if m.isPrimaryConstructor => m
     }.get
 
     val constructorArgs = constructor.paramss.head
 
-    constructorArgs
+    constructorArgs.map { field =>
+      val fieldName = field.name.decoded
+      val fieldType = field.typeSignature
+      fieldName -> fieldType
+    }
   }
 }

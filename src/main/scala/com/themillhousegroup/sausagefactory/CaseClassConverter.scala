@@ -20,7 +20,7 @@ object CaseClassConverter {
   }
 }
 
-protected abstract class CaseClassConverter {
+protected trait CaseClassConverter {
   def buildCaseClass[T: TypeTag](t: Type, map: Map[String, Any]): T
 }
 

@@ -50,17 +50,35 @@ If you're having trouble getting things to line up (and you aren't able to chang
 ```
 
 ## I have special needs!
-Don't we all. If you need to perform some additional adjustment/casting/conversion at any stage during the
-sausage-making process (that you don't think would benefit anyone else with a pull request!), there are extension-points
+Don't we all. If you need to perform some additional adjustment/casting/conversion during the sausage-making process (that you don't think would benefit anyone else with a [pull request](https://github.com/themillhousegroup/sausagefactory/pulls)!), there is an extension-point
 built into the process that will allow you to hook in and change what you need.
 
-Currently there are two "extension" traits whereby you can mix in custom implementations:
+If you look at the signature for the `CaseClassConverter` object's `apply` method, you'll see that there is an optional second argument:
 
-#### `FieldConverters` 
+```
+object CaseClassConverter {
+
+  def apply[T](	map: Map[String, Any],
+    			converter: => FieldConverter = defaultFieldConverter): Try[T]
+    
+    ...
+}
+``` 
+
+Where `FieldConverter` is a one-method trait defined as follows:
+
+```
+trait FieldConverter {
+  def convert[F](t: Type, v: Any): F
+}
+```
+
+Simply supply your own `FieldConverter` implementation as the second param.
+
  - Function `convert()`gets invoked once we've found a match between a
 case class fieldname and a key in the incoming map. 
  - Provide your own if
 (for example) you're getting a type mismatch because the map has a value of type `Long` but your case class expects an `Int`.
-- Example / test spec: [FieldConverterExtensionExampleSpec](https://github.com/themillhousegroup/sausagefactory/blob/master/src/test/scala/com/themillhousegroup/sausagefactory/FieldConverterExtensionExampleSpec.scala)
+- Example / test spec: [CustomFieldConverterExampleSpec](https://github.com/themillhousegroup/sausagefactory/blob/master/src/test/scala/com/themillhousegroup/sausagefactory/CustomFieldConverterExampleSpec.scala)
 
 

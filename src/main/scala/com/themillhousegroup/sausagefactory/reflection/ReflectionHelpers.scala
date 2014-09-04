@@ -24,7 +24,13 @@ trait ReflectionHelpers extends TypeSymbols {
   }
 
   def findOptionTarget(t: Type) = {
-    t.typeArgs.head
+    // 2.10.x compatible way:
+    val args = t match {
+      case TypeRef(_, _, args) => args
+    }
+    args.head
+    // 2.11.x simpler way:
+    // t.typeArgs.head
   }
 
   def constructorArguments(t: Type): List[(String, Type)] = {

@@ -3,6 +3,31 @@ sausagefactory
 
 Turns Maps into Scala case classes.
 
+## Getting Started
+
+#### Including the dependency
+Bring in the library by adding the following to your ```build.sbt```. 
+
+  - The release repository: 
+
+```
+   resolvers ++= Seq(
+     "millhouse-releases" at "http://repository-themillhousegroup.forge.cloudbees.com/release"
+   )
+```
+  - The dependency itself: 
+
+```
+   libraryDependencies ++= Seq(
+     "com.themillhousegroup" %% "sausagefactory" % "0.1.0"
+   )
+
+```
+
+#### A note on Scala versions
+The library is cross-built for Scala 2.10.4 and 2.11.2, but 2.11.2 is _highly_ recommended; a number of reflection features are used and `scala-reflect` seems to be much more reliable in Scala 2.11.
+
+
 ## Usage
 
 Assuming the following declarations:

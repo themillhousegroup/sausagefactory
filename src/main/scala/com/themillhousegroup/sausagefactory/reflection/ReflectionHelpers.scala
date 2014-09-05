@@ -16,7 +16,7 @@ trait ReflectionHelpers extends TypeSymbols {
     }
 
   def isOption(t: Type) = hasClass(t, optionType)
-  def isTraversableOfMaps(t: Type) = hasClass(t, traversableOnceOfMaps)
+  def isListOfMaps(t: Type) = hasClass(t, listOfMaps)
 
   def isInt(t: Type) = hasClass(t, intType)
 

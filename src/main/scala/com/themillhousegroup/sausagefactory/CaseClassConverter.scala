@@ -52,9 +52,9 @@ class CaseClassConverter(fc: FieldConverter) extends ReflectionHelpers {
     }
   }
 
-  protected def matchOptionalField[F](fieldName: String, fieldType: Type, mapValue: Option[Any]): Option[F] = {
+  protected def matchOptionalField(fieldName: String, fieldType: Type, mapValue: Option[Any]): Option[Any] = {
     mapValue.fold {
-      None.asInstanceOf[Option[F]]
+      None.asInstanceOf[Option[Any]]
     } { v =>
       // given that fieldType is an Option[X], find what X is...
       val optionTargetType = findContainerClassTarget(fieldType)
@@ -66,33 +66,39 @@ class CaseClassConverter(fc: FieldConverter) extends ReflectionHelpers {
     }
   }
 
-  protected def matchRequiredField[F](fieldName: String, fieldType: Type, mapValue: Option[Any]): F = {
-    mapValue.fold[F] {
+  protected def matchRequiredField(fieldName: String, fieldType: Type, mapValue: Option[Any]): Any = {
+    mapValue.fold {
       // Map does NOT contain a field with this keyword
       throw new IllegalArgumentException(s"Non-optional field '${fieldName}' was not found in the given map.")
     } { v =>
       if (isCaseClass(fieldType)) {
         buildCaseClass(fieldType, v.asInstanceOf[Map[String, Any]])
       } else {
-        if (isTraversableOfMaps(fieldType)) {
 
-          println(s"Traversable $fieldType, mapValue: $v")
+        // Needs much DRYing up, and probably could do it better with pattern-matching
+
+        if (isListOfMaps(fieldType)) {
+
+          println(s"List $fieldType, mapValue: $v")
           val targetType = findContainerClassTarget(fieldType)
-          println(s"Target: $targetType")
-          val asList = v.asInstanceOf[TraversableOnce[Map[String, Any]]]
-          println(s"asList: $asList")
+          if (isCaseClass(targetType)) {
+            println(s"Target: $targetType")
+            val asList = v.asInstanceOf[List[Map[String, Any]]]
+            println(s"asList: $asList")
 
-          val converted = asList.map { innerMap =>
-            println(s"InnerMap: $innerMap")
-            val bcc = buildCaseClass(targetType, innerMap)
-            println(s"BCC: $bcc")
-            bcc
+            val converted = asList.map { innerMap =>
+              println(s"InnerMap: $innerMap")
+              val bcc: Product = buildCaseClass(targetType, innerMap)
+              println(s"BCC: $bcc")
+              bcc
+            }
+
+            println(s"conv: ${converted.toSeq.take(2)}")
+
+            converted //.asInstanceOf[F]
+          } else {
+            fc.convert(fieldType, v)
           }
-
-          println(s"conv: ${converted.mkString}")
-          //.asInstanceOf[F]
-
-          fc.convert(fieldType, v)
         } else {
           fc.convert(fieldType, v)
         }

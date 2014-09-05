@@ -16,20 +16,19 @@ class ReadIntoCollectionOfCaseClassSpec extends Specification with CaseClassSpec
           buildMap("x", "y", "z")
         ))) {
 
-      //      val readResult = readIntoResult[ListOfNestedCaseClasses]
-      //      readResult must not beNull
-      //
-      //      readResult.first must not beNull
-      //
-      //      readResult.first must beEqualTo("foo")
-      //
-      //      readResult.second must not beNull
-      //
-      //      readResult.second must haveSize(2)
-      //
-      //      readResult.second.head must beAnInstanceOf[AllStrings] // Currently failing - implement!
+      val readResult = readIntoResult[ListOfNestedCaseClasses]
+      readResult must not beNull
 
-      pending("not yet implemented")
+      readResult.first must not beNull
+
+      readResult.first must beEqualTo("foo")
+
+      readResult.second must not beNull
+
+      readResult.second must haveSize(2)
+
+      readResult.second.head must beAnInstanceOf[AllStrings] // Currently failing - implement!
+
     }
   }
 }

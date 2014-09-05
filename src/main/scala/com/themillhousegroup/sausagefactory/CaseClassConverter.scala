@@ -3,8 +3,9 @@ package com.themillhousegroup.sausagefactory
 import com.themillhousegroup.sausagefactory.reflection.ReflectionHelpers
 import scala.reflect.runtime.universe._
 import scala.collection.immutable.Map
-import scala.Predef.String
+import scala.Predef._
 import scala.util.Try
+import scala.collection.GenTraversableOnce
 
 object CaseClassConverter {
 
@@ -56,7 +57,7 @@ class CaseClassConverter(fc: FieldConverter) extends ReflectionHelpers {
       None.asInstanceOf[Option[F]]
     } { v =>
       // given that fieldType is an Option[X], find what X is...
-      val optionTargetType = findOptionTarget(fieldType)
+      val optionTargetType = findContainerClassTarget(fieldType)
       if (isCaseClass(optionTargetType)) {
         Some(buildCaseClass(optionTargetType, v.asInstanceOf[Map[String, Any]]))
       } else {
@@ -73,7 +74,28 @@ class CaseClassConverter(fc: FieldConverter) extends ReflectionHelpers {
       if (isCaseClass(fieldType)) {
         buildCaseClass(fieldType, v.asInstanceOf[Map[String, Any]])
       } else {
-        fc.convert(fieldType, v)
+        if (isTraversableOfMaps(fieldType)) {
+
+          println(s"Traversable $fieldType, mapValue: $v")
+          val targetType = findContainerClassTarget(fieldType)
+          println(s"Target: $targetType")
+          val asList = v.asInstanceOf[TraversableOnce[Map[String, Any]]]
+          println(s"asList: $asList")
+
+          val converted = asList.map { innerMap =>
+            println(s"InnerMap: $innerMap")
+            val bcc = buildCaseClass(targetType, innerMap)
+            println(s"BCC: $bcc")
+            bcc
+          }
+
+          println(s"conv: ${converted.mkString}")
+          //.asInstanceOf[F]
+
+          fc.convert(fieldType, v)
+        } else {
+          fc.convert(fieldType, v)
+        }
       }
     }
   }

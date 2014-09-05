@@ -16,6 +16,7 @@ trait ReflectionHelpers extends TypeSymbols {
     }
 
   def isOption(t: Type) = hasClass(t, optionType)
+  def isTraversableOfMaps(t: Type) = hasClass(t, traversableOnceOfMaps)
 
   def isInt(t: Type) = hasClass(t, intType)
 
@@ -23,7 +24,8 @@ trait ReflectionHelpers extends TypeSymbols {
     fieldType.isAssignableFrom(classOf[java.lang.Long])
   }
 
-  def findOptionTarget(t: Type) = {
+  /** For container types like Option[T], List[T], finds T */
+  def findContainerClassTarget(t: Type): Type = {
     // 2.10.x compatible way:
     val args = t match {
       case TypeRef(_, _, args) => args

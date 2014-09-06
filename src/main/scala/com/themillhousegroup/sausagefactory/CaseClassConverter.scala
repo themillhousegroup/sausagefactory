@@ -5,7 +5,6 @@ import scala.reflect.runtime.universe._
 import scala.collection.immutable.Map
 import scala.Predef._
 import scala.util.Try
-import scala.collection.GenTraversableOnce
 
 object CaseClassConverter {
 
@@ -15,6 +14,8 @@ object CaseClassConverter {
     new CaseClassConverter(converter).buildCaseClass[T](typeOf[T], map)
   }
 
+  // TODO: Use of a PartialFunction so that this default case
+  // can be orElse'd after any custom converters?
   private[this] val defaultFieldConverter = new FieldConverter {
     def convert[F](t: Type, v: Any) = {
       v.asInstanceOf[F]
@@ -58,11 +59,7 @@ class CaseClassConverter(fc: FieldConverter) extends ReflectionHelpers {
     } { v =>
       // given that fieldType is an Option[X], find what X is...
       val optionTargetType = findContainerClassTarget(fieldType)
-      if (isCaseClass(optionTargetType)) {
-        Some(buildCaseClass(optionTargetType, v.asInstanceOf[Map[String, Any]]))
-      } else {
-        Some(fc.convert(fieldType, v))
-      }
+      Some(matchField(optionTargetType, v))
     }
   }
 
@@ -71,29 +68,30 @@ class CaseClassConverter(fc: FieldConverter) extends ReflectionHelpers {
       // Map does NOT contain a field with this keyword
       throw new IllegalArgumentException(s"Non-optional field '${fieldName}' was not found in the given map.")
     } { v =>
-      if (isCaseClass(fieldType)) {
-        buildCaseClass(fieldType, v.asInstanceOf[Map[String, Any]])
-      } else {
+      matchField(fieldType, v)
+    }
+  }
 
-        // Needs much DRYing up, and probably could do it better with pattern-matching
+  protected def matchField(fieldType: Type, mapValue: Any): Any = {
+    if (isCaseClass(fieldType)) {
+      buildCaseClass(fieldType, mapValue.asInstanceOf[Map[String, Any]])
+    } else {
+      if (isListOfMaps(fieldType)) {
 
-        if (isListOfMaps(fieldType)) {
-
-          println(s"List $fieldType, mapValue: $v")
-          val targetType = findContainerClassTarget(fieldType)
-          if (isCaseClass(targetType)) {
-            convertCollection(targetType, v.asInstanceOf[List[Map[String, Any]]])
-          } else {
-            fc.convert(fieldType, v)
-          }
+        println(s"List $fieldType, mapValue: $mapValue")
+        val targetType = findContainerClassTarget(fieldType)
+        if (isCaseClass(targetType)) {
+          convertList(targetType, mapValue.asInstanceOf[List[Map[String, Any]]])
         } else {
-          fc.convert(fieldType, v)
+          fc.convert(fieldType, mapValue)
         }
+      } else {
+        fc.convert(fieldType, mapValue)
       }
     }
   }
 
-  protected def convertCollection[C[T] <: List[T]](targetType: Type, v: C[Map[String, Any]]): List[Product] = {
+  protected def convertList[C[T] <: List[T]](targetType: Type, v: C[Map[String, Any]]): List[Product] = {
     v.map { innerMap =>
       buildCaseClass[Product](targetType, innerMap)
     }

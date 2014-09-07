@@ -5,26 +5,25 @@ import scala.reflect.runtime.universe._
 import scala.collection.immutable.Map
 import scala.Predef._
 import scala.util.Try
+import com.themillhousegroup.sausagefactory.CaseClassConverter.FieldConverter
 
 object CaseClassConverter {
 
+  type FieldConverter = PartialFunction[(Type, Any), Any]
+
+  def apply[T <: Product: TypeTag](map: Map[String, Any]): Try[T] = Try {
+    new CaseClassConverter(defaultFieldConverter).buildCaseClass[T](typeOf[T], map)
+  }
+
   def apply[T <: Product: TypeTag](
     map: Map[String, Any],
-    converter: => FieldConverter = defaultFieldConverter): Try[T] = Try {
-    new CaseClassConverter(converter).buildCaseClass[T](typeOf[T], map)
+    converter: => FieldConverter): Try[T] = Try {
+    new CaseClassConverter(converter orElse defaultFieldConverter).buildCaseClass[T](typeOf[T], map)
   }
 
-  // TODO: Use of a PartialFunction so that this default case
-  // can be orElse'd after any custom converters?
-  private[this] val defaultFieldConverter = new FieldConverter {
-    def convert[F](t: Type, v: Any) = {
-      v.asInstanceOf[F]
-    }
+  private[this] val defaultFieldConverter: FieldConverter = {
+    case (t: Type, v: Any) => v
   }
-}
-
-trait FieldConverter {
-  def convert[F](t: Type, v: Any): F
 }
 
 class CaseClassConverter(fc: FieldConverter) extends ReflectionHelpers {
@@ -84,10 +83,10 @@ class CaseClassConverter(fc: FieldConverter) extends ReflectionHelpers {
         if (isCaseClass(targetType)) {
           convertIterable(targetType, mapValue.asInstanceOf[Iterable[Map[String, Any]]])
         } else {
-          fc.convert(fieldType, mapValue)
+          fc(fieldType, mapValue)
         }
       } else {
-        fc.convert(fieldType, mapValue)
+        fc(fieldType, mapValue)
       }
     }
   }

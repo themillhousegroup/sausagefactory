@@ -4,18 +4,15 @@ import org.specs2.mutable.Specification
 import com.themillhousegroup.sausagefactory.reflection.ReflectionHelpers
 import scala.reflect.runtime.universe._
 import com.themillhousegroup.sausagefactory.test.CaseClassFixtures._
+import com.themillhousegroup.sausagefactory.CaseClassConverter.FieldConverter
 
-object AlwaysMakeJavaLongsIntoInts extends FieldConverter with ReflectionHelpers {
-  override def convert[F](t: Type, v: Any): F = {
-    if (isInt(t) && isJLong(v.getClass)) {
-      v.asInstanceOf[Long].toInt.asInstanceOf[F]
-    } else {
-      v.asInstanceOf[F]
+class CustomFieldConverterExampleSpec extends Specification with ReflectionHelpers {
+
+  val alwaysMakeJavaLongsIntoInts: FieldConverter = {
+    case (t: Type, v: Any) if (isInt(t) && isJLong(v.getClass)) => {
+      v.asInstanceOf[Long].toInt
     }
   }
-}
-
-class CustomFieldConverterExampleSpec extends Specification {
 
   "FieldConverters extension point (JLong->Int autoconverter)" should {
 
@@ -23,7 +20,7 @@ class CustomFieldConverterExampleSpec extends Specification {
 
       val map = buildMap(new java.lang.Long(99), new java.lang.Long(77))
 
-      val result = CaseClassConverter[IntsNotLongs](map, AlwaysMakeJavaLongsIntoInts)
+      val result = CaseClassConverter[IntsNotLongs](map, alwaysMakeJavaLongsIntoInts)
 
       val readResult = result.get
       readResult must not beNull

@@ -28,8 +28,10 @@ object CaseClassFixtures {
   case class ThreeLevelsDeep(first: Int, second: Int, third: Option[StringsAllTheWayDown])
 
   // Collections of case classes
-  case class ListOfNestedCaseClasses(first: String, second: List[AllStrings])
-  case class SeqOfNestedCaseClasses(first: String, second: Seq[AllStrings])
+  abstract class CollectionCaseClass(val first: String, val second: Traversable[AllStrings])
+  case class ListOfNestedCaseClasses(override val first: String, override val second: List[AllStrings]) extends CollectionCaseClass(first, second)
+  case class SeqOfNestedCaseClasses(override val first: String, override val second: Seq[AllStrings]) extends CollectionCaseClass(first, second)
+  case class SetOfNestedCaseClasses(override val first: String, override val second: Set[AllStrings]) extends CollectionCaseClass(first, second)
 
   val keys = Seq("first", "second", "third")
 

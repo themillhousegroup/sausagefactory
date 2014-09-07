@@ -3,20 +3,13 @@ package com.themillhousegroup.sausagefactory
 import com.themillhousegroup.sausagefactory.test.CaseClassFixtures._
 import com.themillhousegroup.sausagefactory.test.CaseClassSpecification
 import org.specs2.mutable.Specification
+import scala.reflect._
 
 class ReadIntoCollectionOfCaseClassSpec extends Specification with CaseClassSpecification {
 
   "Reading maps into case classes - nested collections of case classes  -" should {
 
-    "Support nested Lists of case classes" in new CaseClassScope(
-      buildMap(
-        "foo",
-        List(
-          buildMap("a", "b", "c"),
-          buildMap("x", "y", "z")
-        ))) {
-
-      val readResult = readIntoResult[ListOfNestedCaseClasses]
+    def thenIShouldHaveA[T <: CollectionCaseClass, I: ClassTag](readResult: T) = {
       readResult must not beNull
 
       readResult.first must not beNull
@@ -27,8 +20,20 @@ class ReadIntoCollectionOfCaseClassSpec extends Specification with CaseClassSpec
 
       readResult.second must haveSize(2)
 
-      readResult.second.head must beAnInstanceOf[AllStrings]
+      readResult.second.head must beAnInstanceOf[I]
+    }
 
+    "Support nested Lists of case classes" in new CaseClassScope(
+      buildMap(
+        "foo",
+        List(
+          buildMap("a", "b", "c"),
+          buildMap("x", "y", "z")
+        ))) {
+
+      val readResult = readIntoResult[ListOfNestedCaseClasses]
+
+      thenIShouldHaveA[ListOfNestedCaseClasses, AllStrings](readResult)
     }
 
     "Support nested Seqs of case classes" in new CaseClassScope(
@@ -40,17 +45,22 @@ class ReadIntoCollectionOfCaseClassSpec extends Specification with CaseClassSpec
         ))) {
 
       val readResult = readIntoResult[SeqOfNestedCaseClasses]
-      readResult must not beNull
 
-      readResult.first must not beNull
+      thenIShouldHaveA[SeqOfNestedCaseClasses, AllStrings](readResult)
 
-      readResult.first must beEqualTo("foo")
+    }
 
-      readResult.second must not beNull
+    "Support nested Sets of case classes" in new CaseClassScope(
+      buildMap(
+        "foo",
+        Set(
+          buildMap("a", "b", "c"),
+          buildMap("x", "y", "z")
+        ))) {
 
-      readResult.second must haveSize(2)
+      val readResult = readIntoResult[SetOfNestedCaseClasses]
 
-      readResult.second.head must beAnInstanceOf[AllStrings]
+      thenIShouldHaveA[SetOfNestedCaseClasses, AllStrings](readResult)
 
     }
   }

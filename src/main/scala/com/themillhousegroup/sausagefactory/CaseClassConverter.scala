@@ -76,12 +76,13 @@ class CaseClassConverter(fc: FieldConverter) extends ReflectionHelpers {
     if (isCaseClass(fieldType)) {
       buildCaseClass(fieldType, mapValue.asInstanceOf[Map[String, Any]])
     } else {
-      if (isListOfMaps(fieldType)) {
 
-        println(s"List $fieldType, mapValue: $mapValue")
+      if (isSeqOfMaps(fieldType)) {
+
+        println(s"Seq $fieldType, mapValue: $mapValue")
         val targetType = findContainerClassTarget(fieldType)
         if (isCaseClass(targetType)) {
-          convertList(targetType, mapValue.asInstanceOf[List[Map[String, Any]]])
+          convertSeq(targetType, mapValue.asInstanceOf[Seq[Map[String, Any]]])
         } else {
           fc.convert(fieldType, mapValue)
         }
@@ -91,7 +92,7 @@ class CaseClassConverter(fc: FieldConverter) extends ReflectionHelpers {
     }
   }
 
-  protected def convertList[C[T] <: List[T]](targetType: Type, v: C[Map[String, Any]]): List[Product] = {
+  protected def convertSeq[C[T] <: Seq[T]](targetType: Type, v: C[Map[String, Any]]): Seq[Product] = {
     v.map { innerMap =>
       buildCaseClass[Product](targetType, innerMap)
     }

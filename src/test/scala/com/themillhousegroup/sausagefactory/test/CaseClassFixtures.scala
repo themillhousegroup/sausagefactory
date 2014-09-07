@@ -29,6 +29,7 @@ object CaseClassFixtures {
 
   // Collections of case classes
   case class ListOfNestedCaseClasses(first: String, second: List[AllStrings])
+  case class SeqOfNestedCaseClasses(first: String, second: Seq[AllStrings])
 
   val keys = Seq("first", "second", "third")
 

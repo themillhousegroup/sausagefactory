@@ -8,7 +8,7 @@ class ReadIntoCollectionOfCaseClassSpec extends Specification with CaseClassSpec
 
   "Reading maps into case classes - nested collections of case classes  -" should {
 
-    "Support nested collections of case classes" in new CaseClassScope(
+    "Support nested Lists of case classes" in new CaseClassScope(
       buildMap(
         "foo",
         List(
@@ -27,7 +27,30 @@ class ReadIntoCollectionOfCaseClassSpec extends Specification with CaseClassSpec
 
       readResult.second must haveSize(2)
 
-      readResult.second.head must beAnInstanceOf[AllStrings] // Currently failing - implement!
+      readResult.second.head must beAnInstanceOf[AllStrings]
+
+    }
+
+    "Support nested Seqs of case classes" in new CaseClassScope(
+      buildMap(
+        "foo",
+        Seq(
+          buildMap("a", "b", "c"),
+          buildMap("x", "y", "z")
+        ))) {
+
+      val readResult = readIntoResult[SeqOfNestedCaseClasses]
+      readResult must not beNull
+
+      readResult.first must not beNull
+
+      readResult.first must beEqualTo("foo")
+
+      readResult.second must not beNull
+
+      readResult.second must haveSize(2)
+
+      readResult.second.head must beAnInstanceOf[AllStrings]
 
     }
   }

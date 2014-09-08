@@ -19,7 +19,7 @@ Bring in the library by adding the following to your ```build.sbt```.
 
 ```
    libraryDependencies ++= Seq(
-     "com.themillhousegroup" %% "sausagefactory" % "0.1.0"
+     "com.themillhousegroup" %% "sausagefactory" % "0.2.0"
    )
 
 ```
@@ -72,7 +72,7 @@ If you're having trouble getting things to line up (and you aren't able to chang
 
     case class NestedOptionalCaseClass (foo: Option[Basic], bar: Option[Basic])
     
-    case class CaseClassCollections(foo: Set[Basic], bar: Seq[Basic], baz: List[Basic])
+    case class CollectionsOfCaseClass (foo: Set[Basic], bar: Seq[Basic], baz: List[Basic])
 
 ```
 
@@ -80,32 +80,47 @@ If you're having trouble getting things to line up (and you aren't able to chang
 Don't we all. If you need to perform some additional adjustment/casting/conversion during the sausage-making process (that you don't think would benefit anyone else with a [pull request](https://github.com/themillhousegroup/sausagefactory/pulls)!), there is an extension-point
 built into the process that will allow you to hook in and change what you need.
 
+
+
 If you look at the signature for the `CaseClassConverter` object's `apply` method, you'll see that there is an optional second argument:
 
 ```
 object CaseClassConverter {
 
+  def apply[T <: Product: TypeTag](map: Map[String, Any]): Try[T] 
+  ...
+
   def apply[T](	map: Map[String, Any],
-    			converter: => FieldConverter = defaultFieldConverter): Try[T]
+    			converter: => FieldConverter): Try[T]
     
     ...
 }
 ``` 
 
-Where `FieldConverter` is a one-method trait defined as follows:
+Where `FieldConverter` is a `PartialFunction` defined as follows:
 
 ```
-trait FieldConverter {
-  def convert[F](t: Type, v: Any): F
-}
+type FieldConverter = PartialFunction[(Type, Any), Any]
 ```
 
-Simply supply your own `FieldConverter` implementation as the second param.
-
- - Function `convert()`gets invoked once we've found a match between a
+The `FieldConverter` gets invoked once we've found a match between a
 case class fieldname and a key in the incoming map. 
- - Provide your own if
-(for example) you're getting a type mismatch because the map has a value of type `Long` but your case class expects an `Int`.
-- Example / test spec: [CustomFieldConverterExampleSpec](https://github.com/themillhousegroup/sausagefactory/blob/master/src/test/scala/com/themillhousegroup/sausagefactory/CustomFieldConverterExampleSpec.scala)
+
+You might want to provide your own if (for example) you're getting a type mismatch because the map has a value of type `Long` but your case class expects an `Int`.
+
+When you see `PartialFunction` you just need to read "match expression" - just provide a `case` for the particular situation you need to intercept; e.g.:
+
+```
+import com.themillhousegroup.sausagefactory.reflection.ReflectionHelpers
+import com.themillhousegroup.sausagefactory.CaseClassConverter.FieldConverter
+
+val alwaysMakeJavaLongsIntoInts: FieldConverter = {
+    case (t: Type, v: Any) if (isInt(t) && isJLong(v.getClass)) => {
+      v.asInstanceOf[Long].toInt
+    }
+  }
+```
+
+For more info, see the Example / test spec: [CustomFieldConverterExampleSpec](https://github.com/themillhousegroup/sausagefactory/blob/master/src/test/scala/com/themillhousegroup/sausagefactory/CustomFieldConverterExampleSpec.scala)
 
 

@@ -17,6 +17,7 @@ trait ReflectionHelpers extends TypeSymbols {
 
   def isOption(t: Type) = hasClass(t, optionType)
   def isIterableOfMaps(t: Type) = hasClass(t, iterableOfMaps)
+  def isMapOfMaps(t: Type) = hasClass(t, mapOfMaps)
 
   def isInt(t: Type) = hasClass(t, intType)
 
@@ -31,6 +32,17 @@ trait ReflectionHelpers extends TypeSymbols {
       case TypeRef(_, _, args) => args
     }
     args.head
+    // 2.11.x simpler way:
+    // t.typeArgs.head
+  }
+
+  /** For map types like Map[A, B], finds B */
+  def findMapClassTarget(t: Type): Type = {
+    // 2.10.x compatible way:
+    val args = t match {
+      case TypeRef(_, _, args) => args
+    }
+    args(1)
     // 2.11.x simpler way:
     // t.typeArgs.head
   }

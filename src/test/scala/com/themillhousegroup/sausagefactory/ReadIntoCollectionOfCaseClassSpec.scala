@@ -65,7 +65,7 @@ class ReadIntoCollectionOfCaseClassSpec extends Specification with CaseClassSpec
 
     }
 
-    "Support nested Maps of case classes" in new CaseClassScope(
+    "Support nested Maps of case classes with String keys" in new CaseClassScope(
       buildMap(
         "foo",
         buildMap(

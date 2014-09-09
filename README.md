@@ -74,6 +74,8 @@ If you're having trouble getting things to line up (and you aren't able to chang
     
     case class IterablesOfCaseClass (foo: Set[Basic], bar: Seq[Basic], baz: List[Basic])
 
+    case class MapOfCaseClass (foo: Map[String, Basic], bar: Map[Int, Basic])
+
 ```
 
 ## I have special needs!

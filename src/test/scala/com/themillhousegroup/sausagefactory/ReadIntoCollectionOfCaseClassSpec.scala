@@ -12,7 +12,7 @@ class ReadIntoCollectionOfCaseClassSpec extends Specification with CaseClassSpec
 
     class CollectionScope(m: Map[String, Any]) extends CaseClassScope(m) {
 
-      def shouldBeAbleToReadInto[T <: CollectionCaseClass: TypeTag, I: ClassTag] = {
+      def shouldBeAbleToReadInto[T <: IterablesOfCaseClasses: TypeTag, I: ClassTag] = {
         val readResult = readIntoResult[T]
 
         readResult must not beNull
@@ -62,6 +62,32 @@ class ReadIntoCollectionOfCaseClassSpec extends Specification with CaseClassSpec
         ))) {
 
       shouldBeAbleToReadInto[SetOfNestedCaseClasses, AllStrings]
+
+    }
+
+    "Support nested Maps of case classes" in new CaseClassScope(
+      buildMap(
+        "foo",
+        buildMap(
+          buildMap("a", "b", "c"),
+          buildMap("x", "y", "z")
+        ))) {
+
+      val result = readIntoResult[MapOfNestedCaseClasses]
+
+      result must not beNull
+
+      result.second must beAnInstanceOf[Map[String, AllStrings]]
+
+      val rMap = result.second
+
+      println(s"Rmap: $rMap")
+
+      val first = rMap("first")
+
+      first must not beNull
+
+      first must beAnInstanceOf[AllStrings]
 
     }
   }

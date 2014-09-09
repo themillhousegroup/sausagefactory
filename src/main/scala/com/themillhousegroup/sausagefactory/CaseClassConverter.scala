@@ -76,9 +76,16 @@ class CaseClassConverter(fc: FieldConverter) extends ReflectionHelpers {
       buildCaseClass(fieldType, mapValue.asInstanceOf[Map[String, Any]])
     } else {
 
-      if (isIterableOfMaps(fieldType)) {
+      if (isMapOfMaps(fieldType)) {
+        val targetType = findMapClassTarget(fieldType)
+        if (isCaseClass(targetType)) {
+          convertMap(targetType, mapValue.asInstanceOf[Map[Any, Any]])
+        } else {
+          fc(fieldType, mapValue)
+        }
 
-        println(s"Iterable $fieldType, mapValue: $mapValue")
+      } else if (isIterableOfMaps(fieldType)) {
+
         val targetType = findContainerClassTarget(fieldType)
         if (isCaseClass(targetType)) {
           convertIterable(targetType, mapValue.asInstanceOf[Iterable[Map[String, Any]]])
@@ -95,5 +102,12 @@ class CaseClassConverter(fc: FieldConverter) extends ReflectionHelpers {
     v.map { innerMap =>
       buildCaseClass[Product](targetType, innerMap)
     }
+  }
+
+  protected def convertMap[A](targetType: Type, v: Map[A, Any]): Map[A, Product] = {
+    v.map {
+      case (k, innerMap: Map[String, Any]) =>
+        k -> buildCaseClass[Product](targetType, innerMap)
+    }.toMap
   }
 }

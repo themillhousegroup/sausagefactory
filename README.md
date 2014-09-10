@@ -54,9 +54,9 @@ Invoke the `CaseClassConverter` on the map; it'll give you back a `Try` holding 
 ### How are fields mapped?
 We're looking for exact-matches between the keys of the _map_ and the field names of the _target case class_.
 
-Fields in the _map_ not found in the _target case class_ will be ignored.
+ - Fields in the _map_ not found in the _target case class_ will be ignored.
 
-Fields in the _target case class_ MUST be present in the _map_, unless they are `Option` types, in which case they will be set to None.
+ - Fields in the _target case class_ MUST be present in the _map_, unless they are `Option` types, in which case they will be set to None.
 
 If you're having trouble getting things to line up (and you aren't able to change the _map_ or the _case class_ definition to compensate), check out the ***extension mechanisms*** explained at the bottom of this document.
 
@@ -75,8 +75,9 @@ If you're having trouble getting things to line up (and you aren't able to chang
     case class IterablesOfCaseClass (foo: Set[Basic], bar: Seq[Basic], baz: List[Basic])
 
     case class MapOfCaseClass (foo: Map[String, Basic], bar: Map[Int, Basic])
-
 ```
+The above are just simple examples; Your case classes can be as deeply-nested as you like - Sausagefactory will recurse down as far as needed to instantiate nested objects.
+
 
 ## I have special needs!
 Don't we all. If you need to perform some additional adjustment/casting/conversion during the sausage-making process (that you don't think would benefit anyone else with a [pull request](https://github.com/themillhousegroup/sausagefactory/pulls)!), there is an extension-point

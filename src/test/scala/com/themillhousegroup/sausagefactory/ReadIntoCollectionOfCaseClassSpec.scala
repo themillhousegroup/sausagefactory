@@ -73,7 +73,7 @@ class ReadIntoCollectionOfCaseClassSpec extends Specification with CaseClassSpec
           buildMap("x", "y", "z")
         ))) {
 
-      val result = readIntoResult[MapOfNestedCaseClasses]
+      val result = readIntoResult[MapOfStringToNestedCaseClasses]
 
       result must not beNull
 
@@ -84,6 +84,32 @@ class ReadIntoCollectionOfCaseClassSpec extends Specification with CaseClassSpec
       println(s"Rmap: $rMap")
 
       val first = rMap("first")
+
+      first must not beNull
+
+      first must beAnInstanceOf[AllStrings]
+
+    }
+
+    "Support nested Maps of case classes with Int keys" in new CaseClassScope(
+      buildMap(
+        "foo",
+        buildIntMap(
+          buildMap("a", "b", "c"),
+          buildMap("x", "y", "z")
+        ))) {
+
+      val result = readIntoResult[MapOfIntToNestedCaseClasses]
+
+      result must not beNull
+
+      result.second must beAnInstanceOf[Map[Int, AllStrings]]
+
+      val rMap = result.second
+
+      println(s"Rmap: $rMap")
+
+      val first = rMap(1)
 
       first must not beNull
 

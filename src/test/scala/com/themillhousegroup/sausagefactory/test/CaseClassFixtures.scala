@@ -34,12 +34,19 @@ object CaseClassFixtures {
   case class SetOfNestedCaseClasses(override val first: String, override val second: Set[AllStrings]) extends IterablesOfCaseClasses(first, second)
 
   // Maps of case classes
-  case class MapOfNestedCaseClasses(first: String, second: Map[String, AllStrings])
+  case class MapOfStringToNestedCaseClasses(first: String, second: Map[String, AllStrings])
+  case class MapOfIntToNestedCaseClasses(first: String, second: Map[Int, AllStrings])
 
   val keys = Seq("first", "second", "third")
 
   def buildMap(values: Any*): Map[String, Any] = {
     keys.zip(values).toMap
+  }
+
+  val intKeys = Seq(1, 2, 3)
+
+  def buildIntMap(values: Any*): Map[Int, Any] = {
+    intKeys.zip(values).toMap
   }
 
 }

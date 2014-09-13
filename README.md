@@ -19,7 +19,7 @@ Bring in the library by adding the following to your ```build.sbt```.
 
 ```
    libraryDependencies ++= Seq(
-     "com.themillhousegroup" %% "sausagefactory" % "0.2.0"
+     "com.themillhousegroup" %% "sausagefactory" % "0.3.0"
    )
 
 ```

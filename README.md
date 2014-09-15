@@ -3,6 +3,8 @@ sausagefactory
 
 Turns Maps into Scala case classes.
 
+[![Build Status](https://travis-ci.org/themillhousegroup/sausagefactory.svg?branch=master)](https://travis-ci.org/themillhousegroup/sausagefactory)
+
 ## Getting Started
 
 #### Including the dependency

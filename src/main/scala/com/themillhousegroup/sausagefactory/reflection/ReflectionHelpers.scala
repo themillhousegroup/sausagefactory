@@ -27,24 +27,12 @@ trait ReflectionHelpers extends TypeSymbols {
 
   /** For container types like Option[T], List[T], finds T */
   def findContainerClassTarget(t: Type): Type = {
-    // 2.10.x compatible way:
-    val args = t match {
-      case TypeRef(_, _, args) => args
-    }
-    args.head
-    // 2.11.x simpler way:
-    // t.typeArgs.head
+    t.typeArgs.head
   }
 
   /** For map types like Map[A, B], finds B */
   def findMapClassTarget(t: Type): Type = {
-    // 2.10.x compatible way:
-    val args = t match {
-      case TypeRef(_, _, args) => args
-    }
-    args(1)
-    // 2.11.x simpler way:
-    // t.typeArgs.head
+    t.typeArgs(1)
   }
 
   def constructorArguments(t: Type): List[(String, Type)] = {

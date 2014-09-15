@@ -1,10 +1,8 @@
 name := "sausagefactory"
 
-version := "0.3.0"
+version := "0.4.0"
 
 scalaVersion := "2.11.2"
-
-crossScalaVersions := Seq("2.11.2", "2.10.4")
 
 organization := "com.themillhousegroup"
 

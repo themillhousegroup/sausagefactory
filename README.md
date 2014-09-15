@@ -19,13 +19,15 @@ Bring in the library by adding the following to your ```build.sbt```.
 
 ```
    libraryDependencies ++= Seq(
-     "com.themillhousegroup" %% "sausagefactory" % "0.3.0"
+     "com.themillhousegroup" %% "sausagefactory" % "0.4.0"
    )
 
 ```
 
 #### A note on Scala versions
-The library is cross-built for Scala 2.10.4 and 2.11.2, but 2.11.2 is _highly_ recommended; a number of reflection features are used and `scala-reflect` seems to be much more reliable in Scala 2.11.
+For versions up to 0.3.x: the library is cross-built for Scala 2.10.4 and 2.11.2, but 2.11.2 is _highly_ recommended; a number of reflection features are used and `scala-reflect` seems to be much more reliable in Scala 2.11.
+
+As of version __0.4.0__ only Scala 2.11 is supported. 
 
 
 ## Usage

@@ -1,6 +1,7 @@
 name := "sausagefactory"
 
-version := "0.4.0"
+version := s"${sys.props.getOrElse("build.majorMinor", "0.4")}.${sys.props.getOrElse("build.version", "SNAPSHOT")}"
+
 
 scalaVersion := "2.11.2"
 

@@ -14,14 +14,13 @@ Bring in the library by adding the following to your ```build.sbt```.
 
 ```
    resolvers ++= Seq(
-     "millhouse-releases" at "http://repository-themillhousegroup.forge.cloudbees.com/release"
-   )
+     "Millhouse Bintray"  at "http://dl.bintray.com/themillhousegroup/maven"   )
 ```
   - The dependency itself: 
 
 ```
    libraryDependencies ++= Seq(
-     "com.themillhousegroup" %% "sausagefactory" % "0.4.0"
+     "com.themillhousegroup" %% "sausagefactory" % "0.4.15"
    )
 
 ```

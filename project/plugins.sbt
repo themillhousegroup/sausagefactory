@@ -12,3 +12,5 @@ resolvers += Resolver.url(
         Resolver.ivyStylePatterns)
 
 addSbtPlugin("me.lessis" % "bintray-sbt" % "0.1.2")
+
+addSbtPlugin("com.sksamuel.scapegoat" %% "sbt-scapegoat" % "0.94.6")

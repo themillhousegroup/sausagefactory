@@ -8,7 +8,7 @@ organization := "com.themillhousegroup"
 
 libraryDependencies ++= Seq(
     "com.google.gdata"      %   "core"                  % "1.47.1",
-    "org.mockito"           %   "mockito-all"           % "1.9.5",
+    "org.mockito"           %   "mockito-all"           % "1.10.19",
     "org.scala-lang"        %   "scala-reflect"         % scalaVersion.value,
     "org.specs2"            %%  "specs2"                % "2.3.13"              % "test"
 )

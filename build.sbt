@@ -2,16 +2,15 @@ name := "sausagefactory"
 
 version := s"${sys.props.getOrElse("build.majorMinor", "0.4")}.${sys.props.getOrElse("build.version", "SNAPSHOT")}"
 
-
-scalaVersion := "2.11.2"
+scalaVersion := "2.11.7"
 
 organization := "com.themillhousegroup"
 
 libraryDependencies ++= Seq(
     "com.google.gdata"      %   "core"                  % "1.47.1",
-    "org.mockito"           %   "mockito-all"           % "1.9.0",
+    "org.mockito"           %   "mockito-all"           % "1.9.5",
     "org.scala-lang"        %   "scala-reflect"         % scalaVersion.value,
-    "org.specs2"            %%  "specs2"                % "2.3.12"              % "test"
+    "org.specs2"            %%  "specs2"                % "2.3.13"              % "test"
 )
 
 resolvers ++= Seq(  "oss-snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
